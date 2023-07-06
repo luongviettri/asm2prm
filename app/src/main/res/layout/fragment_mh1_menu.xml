@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:id="@+id/drawerLayout"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+
+    android:background="@color/white"
+
+    android:orientation="vertical"
+
+    tools:context=".activity.MainActivity">
+
+
+    <!--  //! chỗ này là giao diện chính  -->
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+
+        android:background="@color/white"
+
+        android:orientation="vertical">
+
+        <!--ActionBar-->
+        <include layout="@layout/action_bar" />
+
+
+        <!--Image title-->
+
+        <ImageView
+
+            android:layout_width="match_parent"
+
+            android:layout_height="200dp"
+
+            android:src="@drawable/ic_title_animal"
+
+            android:contentDescription="TODO" />
+
+        <!--List Animal-->
+
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:id="@+id/recyclerView_animal"
+
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+
+            android:layout_marginTop="-50dp"
+
+            android:layout_marginEnd="10dp"
+
+            android:layout_marginBottom="20dp"
+
+            android:gravity="center_vertical"
+
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+
+            app:spanCount="3"
+
+            tools:listitem="@layout/item_animal"
+
+
+            />
+
+
+    </LinearLayout>
+
+    <!-- chỗ này là menu -->
+
+    <LinearLayout
+        android:id="@+id/lnLayout"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+
+        android:layout_gravity="start"
+
+        android:background="@color/white">
+
+        <include layout="@layout/item_menu" />
+
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
