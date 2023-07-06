@@ -9,20 +9,20 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.asm2.R;
+import com.example.asm2.dialog.ViewPhoneDialog;
 
 public class AnimalFragment extends Fragment {
     //! khởi tạo các view
     private static final String ARG_ANIMAL = "animal";
 
-    private ImageView ivFavorite, ivBackground, ivPhone;
+    private ImageView ivFavorite, ivBackground, ivPhoneIcon;
     private TextView tvName, tvDetailText;
 
     private EditText etNumber;
@@ -56,69 +56,44 @@ public class AnimalFragment extends Fragment {
 
     private void initView(View view) {
 
-        //!  khởi tạo các view
-        ivFavorite = view.findViewById(R.id.ivFavorite);
-        ivBackground = view.findViewById(R.id.ivBackground);
-        tvName = view.findViewById(R.id.tvName);
-        tvDetailText = view.findViewById(R.id.tvDetailText);
-        iv_menu = view.findViewById(R.id.iv_menu);
+        //!  khởi tạo các view và  gán giá trị
+        initAndAssignVars(view);
 
-        ivPhone = view.findViewById(R.id.ivPhone);
-        etNumber = view.findViewById(R.id.etNumber);
-
-
-        //! gán giá trị
-
-
-        ivBackground.setImageBitmap(animal.getPhotoBg());
-        iv_menu.setImageResource(R.drawable.ic_back);
-
-        tvName.setText(animal.getName());
-        tvDetailText.setText(animal.getContent());
-        iv_menu.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                requireActivity().onBackPressed();
-
-
-            }
-        });
-
-        //? thiết lập hình trái tim
+        //! thiết lập icon back
+        setBackIconForImageView(iv_menu);
+        //! thiết lập hình trái tim
         updateFavoriteState();
-        //? check xem con vật đã có sdt chưa, nếu có rồi thì hiện etNumber lên còn ko thì ẩn
-        //* làm ở code này và tách ra hàm riêng
-//        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
-//        boolean isFav = sharedPreferences.getBoolean("isFav_" + animal.getName(), false);
-//        animal.setFav(isFav);
-//
-//        if (animal.isFav()) {
-//            ivFavorite.setImageResource(R.drawable.ic_favorite1);
-//        } else {
-//            ivFavorite.setImageResource(R.drawable.ic_favorite2);
-//        }
 
-        //* tạm thời hiện
-        etNumber.setVisibility(View.VISIBLE);
-        etNumber.setText("01213");
+        //! check xem con vật đã có sdt chưa, nếu có rồi thì hiện etNumber lên còn ko thì ẩn
+        setPhoneNumberForAnimal(animal);
 
+        //! thiết lập sự kiện cho nút điện thoại
 
+        setEventForPhoneIcon(ivPhoneIcon);
 
 
         //! thiết lập onClick
-        ivFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animal.setFav(!animal.isFav());
+        setFavoriteButton(ivFavorite, animal);
 
-                saveFavoriteState(animal.isFav());  //? lưu lại trong sharedPreferences
-
-                updateFavoriteState();
-            }
-        });
     }
 
+    private void setEventForPhoneIcon(ImageView ivPhoneIcon) {
+
+
+        ivPhoneIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewPhoneDialog.showAlertDialog(requireActivity(), animal, AnimalFragment.this);
+
+            }
+        });
+
+
+    }
+
+    /**
+     * !  để hiện trạng thái các con vật lên xml file
+     */
     private void updateFavoriteState() {
         if (animal.isFav()) {
             ivFavorite.setImageResource(R.drawable.ic_favorite1);
@@ -135,20 +110,74 @@ public class AnimalFragment extends Fragment {
         editor.apply();
     }
 
+    /**
+     * ! hàm set nút back trên toolbar
+     */
+    private void setBackIconForImageView(ImageView imageView) {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requireActivity().onBackPressed();
+            }
+        });
+    }
 
-    //! Đọc trạng thái yêu thích của con vật
-//    private void loadFavoriteState() {
-//        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("FavoriteAnimals", Context.MODE_PRIVATE);
-//        boolean isFav = sharedPreferences.getBoolean("isFav_" + animal.getName(), false);
-//        animal.setFav(isFav);
-//
-//        if (animal.isFav()) {
-//            ivFavorite.setImageResource(R.drawable.ic_favorite1);
-//        } else {
-//            ivFavorite.setImageResource(R.drawable.ic_favorite2);
-//        }
-//
-//    }
+    /**
+     * ! hàm lấy sdt từ trong sharedPreferences và gán vào cho từng con vật
+     */
 
+    private void setPhoneNumberForAnimal(Animal animal) {
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
+        String phoneNumber = sharedPreferences.getString("phoneNumber_" + animal.getName(), "");
+
+        animal.setPhoneNumber(phoneNumber);
+
+        //? nếu animal này có số điện thoại thì cho  hiển thị lên
+        if (!animal.getPhoneNumber().isEmpty()) {
+            etNumber.setVisibility(View.VISIBLE);
+            etNumber.setText(animal.getPhoneNumber());
+        }
+    }
+
+    /**
+     * ! hàm set logic cho nút tim
+     */
+    private void setFavoriteButton(ImageView imageView, Animal animal) {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animal.setFav(!animal.isFav());
+
+                saveFavoriteState(animal.isFav());  //? lưu lại trong sharedPreferences
+
+                updateFavoriteState();
+            }
+        });
+    }
+
+    /**
+     * ! hàm ánh xạ các giá trị
+     */
+    private void initAndAssignVars(View view) {
+        ivFavorite = view.findViewById(R.id.ivFavorite);
+        ivBackground = view.findViewById(R.id.ivBackground);
+        tvName = view.findViewById(R.id.tvName);
+        tvDetailText = view.findViewById(R.id.tvDetailText);
+        iv_menu = view.findViewById(R.id.iv_menu);
+
+        ivPhoneIcon = view.findViewById(R.id.ivPhone);
+        etNumber = view.findViewById(R.id.etNumber);
+
+
+        ivBackground.setImageBitmap(animal.getPhotoBg());
+        iv_menu.setImageResource(R.drawable.ic_back);
+        tvName.setText(animal.getName());
+        tvDetailText.setText(animal.getContent());
+    }
+
+
+    public void updatePhoneNumber(String phoneNumber) {
+        etNumber.setText(phoneNumber);
+    }
 
 }
