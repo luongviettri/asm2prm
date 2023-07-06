@@ -75,8 +75,8 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalHold
     public class AnimalHolder extends RecyclerView.ViewHolder {
         //! khai báo view
         ImageView ivItem;
-
         ImageView ivIcon;
+
 
         //! gán view trong holder
         public AnimalHolder(@NonNull View itemView) {

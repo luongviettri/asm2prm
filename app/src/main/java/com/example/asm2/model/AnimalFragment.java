@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,9 +22,10 @@ public class AnimalFragment extends Fragment {
     //! khởi tạo các view
     private static final String ARG_ANIMAL = "animal";
 
-    private ImageView ivFavorite, ivBackground;
+    private ImageView ivFavorite, ivBackground, ivPhone;
     private TextView tvName, tvDetailText;
 
+    private EditText etNumber;
     private ImageView iv_menu;
 
     private Animal animal;
@@ -60,12 +62,15 @@ public class AnimalFragment extends Fragment {
         tvName = view.findViewById(R.id.tvName);
         tvDetailText = view.findViewById(R.id.tvDetailText);
         iv_menu = view.findViewById(R.id.iv_menu);
+
+        ivPhone = view.findViewById(R.id.ivPhone);
+        etNumber = view.findViewById(R.id.etNumber);
+
+
         //! gán giá trị
 
 
         ivBackground.setImageBitmap(animal.getPhotoBg());
-
-
         iv_menu.setImageResource(R.drawable.ic_back);
 
         tvName.setText(animal.getName());
@@ -80,8 +85,26 @@ public class AnimalFragment extends Fragment {
             }
         });
 
-        //! thiết lập hình trái tim
+        //? thiết lập hình trái tim
         updateFavoriteState();
+        //? check xem con vật đã có sdt chưa, nếu có rồi thì hiện etNumber lên còn ko thì ẩn
+        //* làm ở code này và tách ra hàm riêng
+//        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
+//        boolean isFav = sharedPreferences.getBoolean("isFav_" + animal.getName(), false);
+//        animal.setFav(isFav);
+//
+//        if (animal.isFav()) {
+//            ivFavorite.setImageResource(R.drawable.ic_favorite1);
+//        } else {
+//            ivFavorite.setImageResource(R.drawable.ic_favorite2);
+//        }
+
+        //* tạm thời hiện
+        etNumber.setVisibility(View.VISIBLE);
+        etNumber.setText("01213");
+
+
+
 
         //! thiết lập onClick
         ivFavorite.setOnClickListener(new View.OnClickListener() {
