@@ -83,7 +83,8 @@ public class AnimalFragment extends Fragment {
         ivPhoneIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewPhoneDialog.showAlertDialog(requireActivity(), animal, AnimalFragment.this);
+                ViewPhoneDialog viewPhoneDialog =new ViewPhoneDialog();
+                viewPhoneDialog.showAlertDialog(requireActivity(), animal);
 
             }
         });

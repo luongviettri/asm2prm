@@ -17,11 +17,11 @@ import com.example.asm2.model.Animal;
 import com.example.asm2.model.AnimalFragment;
 
 public class ViewPhoneDialog {
-    static ImageView ivIcon;
-    static EditText etPhoneNumber;
+     ImageView ivIcon;
+     EditText etPhoneNumber;
 
 
-    public static void showAlertDialog(final Context context, Animal animal,  AnimalFragment fragment) {
+    public  void showAlertDialog(final Context context, Animal animal) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -65,7 +65,6 @@ public class ViewPhoneDialog {
 
                     //? View phải cập nhật và hiện lên số điện thoại
                     animal.setPhoneNumber(phoneNumber);
-                    fragment.updatePhoneNumber(phoneNumber);
 
                 }
 
