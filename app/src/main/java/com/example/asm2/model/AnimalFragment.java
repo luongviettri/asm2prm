@@ -3,6 +3,7 @@ package com.example.asm2.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,8 +84,8 @@ public class AnimalFragment extends Fragment {
         ivPhoneIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ViewPhoneDialog viewPhoneDialog =new ViewPhoneDialog();
-                viewPhoneDialog.showAlertDialog(requireActivity(), animal);
+                ViewPhoneDialog viewPhoneDialog = new ViewPhoneDialog();
+                viewPhoneDialog.showAlertDialog(requireActivity(), animal, etNumber);
 
             }
         });

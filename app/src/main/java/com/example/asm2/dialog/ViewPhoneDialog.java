@@ -8,21 +8,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.asm2.R;
 import com.example.asm2.model.Animal;
-import com.example.asm2.model.AnimalFragment;
 
 public class ViewPhoneDialog {
-     ImageView ivIcon;
-     EditText etPhoneNumber;
+    ImageView ivIcon;
+    EditText etPhoneNumber;
 
 
-    public  void showAlertDialog(final Context context, Animal animal) {
+    public void showAlertDialog(final Context context, Animal animal, EditText etNumber) {
 
+
+//        listener.onClick();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         //! Tạo đối tượng LayoutInflater từ context
@@ -32,8 +32,14 @@ public class ViewPhoneDialog {
         ivIcon = view.findViewById(R.id.ivIcon);
         etPhoneNumber = view.findViewById(R.id.etPhoneNumber);
 
-        if (!animal.getPhoneNumber().isEmpty()) {
-            etPhoneNumber.setText(animal.getPhoneNumber());
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
+        String phoneNumber = sharedPreferences.getString("phoneNumber_" + animal.getName(), "");
+
+
+        if (!phoneNumber.isEmpty()) {
+
+            etPhoneNumber.setText(phoneNumber);
         }
 
         ivIcon.setImageBitmap(animal.getPhoto());
@@ -50,22 +56,29 @@ public class ViewPhoneDialog {
         Button btnDelete = view.findViewById(R.id.btnDelete);
 
 
+        //? cập nhật vào kho sharedPrefences
+        sharedPreferences = context.getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //? Xử lý khi người dùng chọn "Yes"
                 String phoneNumber = etPhoneNumber.getText().toString();
                 if (!phoneNumber.isEmpty()) {
+
+
+                    etNumber.setVisibility(View.VISIBLE);
+
                     Log.d("thuc hien luu vao sharedPrefernces", "thuc hien luu vao sharedPrefernces");
-                    //? cập nhật vào kho sharedPrefences
-                    SharedPreferences sharedPreferences =  context.getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
                     editor.putString("phoneNumber_" + animal.getName(), phoneNumber);
                     editor.apply();
 
                     //? View phải cập nhật và hiện lên số điện thoại
-                    animal.setPhoneNumber(phoneNumber);
-
+//                    animal.setPhoneNumber(phoneNumber);
+                    //!//////////////////////////////////////////////////
+                    etNumber.setText(phoneNumber);
                 }
 
                 dialog.dismiss(); // Đóng dialog
@@ -77,7 +90,20 @@ public class ViewPhoneDialog {
             public void onClick(View v) {
                 //? Xử lý khi người dùng chọn "No"
                 Log.d("thuc hien remove sharedPrefernces", "thuc hien remove sharedPrefernces");
+
+
+//                 sharedPreferences = context.getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
+//                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("phoneNumber_" + animal.getName());
+                editor.apply();
+
                 dialog.dismiss(); // Đóng dialog
+
+                //! chinh lai edittext
+                etNumber.setText("");
+                etNumber.setVisibility(View.GONE);
+
+
             }
         });
 

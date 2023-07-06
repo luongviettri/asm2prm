@@ -3,12 +3,10 @@ package com.example.asm2.fragment;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.asm2.R;
-import com.example.asm2.adapter.AnimalPagerAdapter;
-import com.example.asm2.adapter.AnimalPagerAdapter2;
+import com.example.asm2.adapter.AnimalFragmentPagerAdapter;
 import com.example.asm2.model.Animal;
 
 import java.util.ArrayList;
@@ -25,7 +22,7 @@ import java.util.ArrayList;
 
 public class FragmentMh2Detail extends Fragment {
     private ViewPager viewPager;
-    private AnimalPagerAdapter2 animalPagerAdapter2;
+    private AnimalFragmentPagerAdapter animalFragmentPagerAdapter;
     private Context mContext;
     private ImageView ivFavorite, ivBackground, iv_back;
     private TextView tvName, tvDetailText;
@@ -56,10 +53,10 @@ public class FragmentMh2Detail extends Fragment {
 
         viewPager = view.findViewById(R.id.viewPager);
         //! Khởi tạo adapter cho ViewPager
-        animalPagerAdapter2 = new AnimalPagerAdapter2(mContext, listAnimals, getChildFragmentManager());
+        animalFragmentPagerAdapter = new AnimalFragmentPagerAdapter(mContext, listAnimals, getChildFragmentManager());
 
         //! Thiết lập adapter cho ViewPager
-        viewPager.setAdapter(animalPagerAdapter2);
+        viewPager.setAdapter(animalFragmentPagerAdapter);
 
         //! Lấy vị trí của animal trong danh sách
         int position = listAnimals.indexOf(animal);

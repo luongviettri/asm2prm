@@ -7,18 +7,15 @@ import androidx.viewpager.widget.ViewPager;
 import android.os.Bundle;
 
 import com.example.asm2.R;
-import com.example.asm2.adapter.AnimalPagerAdapter;
 import com.example.asm2.fragment.FragmentMh1Menu;
 import com.example.asm2.fragment.FragmentMh2Detail;
 import com.example.asm2.model.Animal;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
-    private AnimalPagerAdapter animalPagerAdapter;
 
 
     @Override

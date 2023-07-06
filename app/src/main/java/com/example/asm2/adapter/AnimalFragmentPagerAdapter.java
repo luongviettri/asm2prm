@@ -12,13 +12,13 @@ import com.example.asm2.model.AnimalFragment;
 
 import java.util.List;
 
-public class AnimalPagerAdapter2 extends FragmentPagerAdapter {
+public class AnimalFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private Context context;
     private List<Animal> animalList;
 
 
-    public AnimalPagerAdapter2(Context context, List<Animal> animalList, FragmentManager fragmentManager) {
+    public AnimalFragmentPagerAdapter(Context context, List<Animal> animalList, FragmentManager fragmentManager) {
         super(fragmentManager);
         this.context = context;
         this.animalList = animalList;
