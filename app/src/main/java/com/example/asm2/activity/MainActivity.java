@@ -6,12 +6,15 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.asm2.PhoneStateEmojiReceiver;
 import com.example.asm2.R;
 import com.example.asm2.fragment.FragmentMh1Menu;
 import com.example.asm2.fragment.FragmentMh2Detail;
@@ -21,7 +24,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private ViewPager viewPager;
+    private PhoneStateEmojiReceiver phoneStateEmojiReceiver;
 
 
     @Override
@@ -47,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
                     Manifest.permission.READ_CALL_LOG,
             }, 101);
         }
+        //! Đăng ký IncomingCallReceiver động
+        registerIncomingCallReceiver();
+
     }
 
     @Override
@@ -98,5 +104,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+    private void registerIncomingCallReceiver() {
+        phoneStateEmojiReceiver = new PhoneStateEmojiReceiver();
+        IntentFilter intentFilter = new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+        registerReceiver(phoneStateEmojiReceiver, intentFilter);
+    }
+
+    private void unregisterIncomingCallReceiver() {
+        if (phoneStateEmojiReceiver != null) {
+            unregisterReceiver(phoneStateEmojiReceiver);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        //! Hủy đăng ký IncomingCallReceiver khi Activity bị hủy
+        unregisterIncomingCallReceiver();
+    }
 }
 
