@@ -29,11 +29,8 @@ import java.util.List;
 
 public class FragmentMh1Menu extends Fragment {
     private Context mContext;
-
     private RecyclerView recyclerViewAnimal;
-
     private List<Animal> listAnimals;
-
     private DrawerLayout drawerLayout;
 
 
@@ -57,52 +54,20 @@ public class FragmentMh1Menu extends Fragment {
 
         recyclerViewAnimal = viewCreatedFragmentMH1.findViewById(R.id.recyclerView_animal);
 
-        //! Xử lý mở menu trái
+        //! cài chức năng cho nút menu trên toolbar
+        setMenuButton(viewCreatedFragmentMH1);
 
-        viewCreatedFragmentMH1.findViewById(R.id.iv_menu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
-
-        //! Hiển thị ảnh sea animal
-
-        viewCreatedFragmentMH1.findViewById(R.id.iv_sea).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewCreatedFragmentMH1.startAnimation(AnimationUtils.loadAnimation(mContext, androidx.appcompat.R.anim.abc_fade_in));
-
-                showAnimals("sea");
-            }
-        });
-
-
-        //! Hiển thị ảnh mammal animal
-
-        viewCreatedFragmentMH1.findViewById(R.id.iv_mammal).setOnClickListener(v1 -> {
-
-            viewCreatedFragmentMH1.startAnimation(AnimationUtils.loadAnimation(mContext, androidx.appcompat.R.anim.abc_fade_in));
-
-            showAnimals("mammal");
-
-        });
-
-
-        //! Hiển thị ảnh bird animal
-
-        viewCreatedFragmentMH1.findViewById(R.id.iv_bird).setOnClickListener(v1 -> {
-
-            viewCreatedFragmentMH1.startAnimation(AnimationUtils.loadAnimation(mContext, androidx.appcompat.R.anim.abc_fade_in));
-
-            showAnimals("bird");
-
-        });
-
+        //! cài list animal dựa vào tùy chọn của user
+        setListAnimal(viewCreatedFragmentMH1);
 
         //! Hiển thị danh sách ảnh lên RecyclerView
+        setAdapterForRecyclerView();
+    }
 
+    /**
+     * ! Hiển thị danh sách ảnh lên RecyclerView
+     */
+    private void setAdapterForRecyclerView() {
         if (listAnimals != null) {
 
             AnimalAdapter animalAdapter = new AnimalAdapter(listAnimals, mContext, new View.OnClickListener() {
@@ -115,8 +80,62 @@ public class FragmentMh1Menu extends Fragment {
             recyclerViewAnimal.setAdapter(animalAdapter);
 
         }
+    }
 
 
+    /**
+     * cài đặt list animal dựa vào tùy chọn của user
+     *
+     * @param viewCreatedFragmentMH1
+     */
+    private void setListAnimal(View viewCreatedFragmentMH1) {
+
+        //! Hiển thị ảnh sea animal
+        viewCreatedFragmentMH1.findViewById(R.id.iv_sea).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewCreatedFragmentMH1.startAnimation(AnimationUtils.loadAnimation(mContext, androidx.appcompat.R.anim.abc_fade_in));
+
+                showAnimals("sea");
+            }
+        });
+
+        //! Hiển thị ảnh mammal animal
+
+        viewCreatedFragmentMH1.findViewById(R.id.iv_mammal).setOnClickListener(v1 -> {
+
+            viewCreatedFragmentMH1.startAnimation(AnimationUtils.loadAnimation(mContext, androidx.appcompat.R.anim.abc_fade_in));
+
+            showAnimals("mammal");
+
+        });
+
+        //! Hiển thị ảnh bird animal
+
+        viewCreatedFragmentMH1.findViewById(R.id.iv_bird).setOnClickListener(v1 -> {
+
+            viewCreatedFragmentMH1.startAnimation(AnimationUtils.loadAnimation(mContext, androidx.appcompat.R.anim.abc_fade_in));
+
+            showAnimals("bird");
+
+        });
+
+
+    }
+
+
+    /**
+     * hàm cài đặt nút menu trên toolbar
+     *
+     * @param viewCreatedFragmentMH1
+     */
+    private void setMenuButton(View viewCreatedFragmentMH1) {
+        viewCreatedFragmentMH1.findViewById(R.id.iv_menu).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
     }
 
     private void doCLickAnimal(Animal animal) {
@@ -129,6 +148,7 @@ public class FragmentMh1Menu extends Fragment {
 
     /**
      * hàm fix lỗi file ảnh quá lớn
+     *
      * @param originalBitmap
      * @return
      */
@@ -147,7 +167,6 @@ public class FragmentMh1Menu extends Fragment {
 
 
     private void showAnimals(String animalType) {
-
 
         listAnimals = new ArrayList<>();
 
