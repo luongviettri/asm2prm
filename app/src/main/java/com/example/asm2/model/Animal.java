@@ -9,7 +9,7 @@ public class Animal implements Serializable {
 
     private final Bitmap photoBg; //! ảnh background
 
-    private final String path; //! đường dẫn đến ảnh
+    private final String path; //! đường dẫn đến ảnh ( ko có xài )
 
     private  String phoneNumber; //! số điện thoại của động vật này
 
