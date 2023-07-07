@@ -49,10 +49,8 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalHold
         holder.ivItem.setOnClickListener(clickListener);
 
 
-        //! đi vào kho sharedPreference để lấy dữ liệu về con vật này
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("FavoriteAnimals", Context.MODE_PRIVATE);
-        boolean isFav = sharedPreferences.getBoolean("isFav_" + animal.getName(), false); //? tiến hành lấy dữ liệu để gán vào fav attribute
-        animal.setFav(isFav);
+
+//        animal.setFav(isFav);
 
         if (animal.isFav()) {
             holder.ivIcon.setImageResource(R.drawable.ic_favorite1);

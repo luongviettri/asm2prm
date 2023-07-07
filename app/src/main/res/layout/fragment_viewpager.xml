@@ -15,7 +15,7 @@
         android:layout_height="200dp"
         android:contentDescription="@string/todo"
         android:scaleType="centerCrop"
-        app:srcCompat="@drawable/ic_crab" />
+        app:srcCompat="@drawable/ic_phone" />
 
     <TableRow
         android:layout_width="match_parent"

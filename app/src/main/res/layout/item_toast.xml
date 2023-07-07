@@ -10,5 +10,5 @@
         android:id="@+id/ivToast"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        app:srcCompat="@drawable/ic_cat" />
+        app:srcCompat="@drawable/ic_phone" />
 </LinearLayout>

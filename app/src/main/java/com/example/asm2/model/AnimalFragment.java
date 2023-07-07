@@ -106,9 +106,11 @@ public class AnimalFragment extends Fragment {
 
     //! Lưu trạng thái yêu thích của con vật
     private void saveFavoriteState(boolean isFavorite) {
+
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("FavoriteAnimals", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean("isFav_" + animal.getName(), isFavorite);
+
         editor.apply();
     }
 

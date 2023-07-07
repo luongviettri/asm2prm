@@ -1,6 +1,7 @@
 package com.example.asm2.fragment;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -170,47 +171,40 @@ public class FragmentMh1Menu extends Fragment {
 
         listAnimals = new ArrayList<>();
 
-        String path = "path";
-        boolean isFav = false;
+        try {
 
-        switch (animalType) {
-            case "bird":
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_eagle)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_eagle)), "eagle", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_falcon)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_falcon)), "falcon", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_hawk)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_hawk)), "hawk", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_parrot)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_parrot)), "parrot", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_peacock)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_peacock)), "peacock", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_peguin)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_penguin)), "penguin", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_raven)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_raven)), "raven", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_sparrow)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_sparrow)), "sparrow", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_woodpecker)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_woodpecker)), "woodpecker", mContext.getString(R.string.detail), isFav));
-                break;
-            case "mammal":
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_cat)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_cat)), "cat", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_dog)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_dog)), "dog", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_hippotamus)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_hippo)), "hippo", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_lion)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_lion)), "lion", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_monkey)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_monkey)), "monkey", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_rabbit)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_rabbit)), "rabbit", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_tiger)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_tiger)), "tiger", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_turtle)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_turtle)), "turtle", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_zibra)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_zebra)), "zebra", mContext.getString(R.string.detail), isFav));
-                break;
-            case "sea":
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_crab)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_crab)), "crab", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_dolphin)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_dolphin)), "dolphin", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_jellyfish)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_jellyfish)), "jellyfish", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_octopus)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_octopus)), "octopus", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_red_snapper)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_red_snapper)), "red snapper", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_shark)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_shark)), "shark", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_squid)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_squid)), "squid", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_swordfish)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_swordfish)), "swordfish", mContext.getString(R.string.detail), isFav));
-                listAnimals.add(new Animal(path, resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.ic_whale)), resizeBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.bg_whale)), "whale", mContext.getString(R.string.detail), isFav));
-                break;
-            default:
-                Log.d("something wrong", "something wrong");
+            String[] list = mContext.getAssets().list("animal/" + animalType);
+
+
+            for (String photo : list) {
+                Bitmap photoB = BitmapFactory.decodeStream(mContext.getAssets().open("animal/" + animalType + "/" + photo));
+                Bitmap photoBG = null;
+                try {
+                    photoBG = BitmapFactory.decodeStream(mContext.getAssets().open("bg_animal/" + animalType + "/" + photo.replace("ic_", "bg_")));
+                } catch (Exception ignored) {
+                }
+                String name = photo;
+                name = name.replace("ic_", "");
+                name = name.substring(0, name.indexOf("."));
+                String fileText = "description/" + animalType + "/des_" + name + ".txt";
+                String content = "example contenttttttttttttttttttttttttttttttttttttttttttt";
+
+                //! Học sinh tự code để đọc dữ liệu text từ đường dẫn fileText trong thư mục assets vào tham số conten
+                //! Lấy thông tin động vật yêu thích đã lưu trữ trong file_savef của SharedPreference
+
+                SharedPreferences sharedPreferences = mContext.getSharedPreferences("FavoriteAnimals", Context.MODE_PRIVATE);
+                boolean isFav = sharedPreferences.getBoolean("isFav_" + name, false);
+
+                //! Khởi tạo động vật
+                String path = animalType + "/" + photo;
+
+                Animal animal = new Animal(path, photoB, photoBG, name, content, isFav);
+                //! Cho vào danh sách
+                listAnimals.add(animal);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
 
         //! Hiển thị danh sách ảnh lên RecyclerView
 
