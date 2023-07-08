@@ -2,6 +2,7 @@ package com.example.asm2.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -24,7 +25,10 @@ import com.example.asm2.activity.MainActivity;
 import com.example.asm2.adapter.AnimalAdapter;
 import com.example.asm2.model.Animal;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +47,7 @@ public class FragmentMh1Menu extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mh1_menu, container, false);
         initView(view);
         return view;
@@ -173,20 +176,21 @@ public class FragmentMh1Menu extends Fragment {
         listAnimals = new ArrayList<>();
 
         try {
+            AssetManager assetManager = mContext.getAssets();
 
-            String[] list = mContext.getAssets().list("animal/" + animalType);
+            String[] list = assetManager.list("animal/" + animalType);
 
 
             for (String photo : list) {
-                Bitmap photoIcon = BitmapFactory.decodeStream(mContext.getAssets().open("animal/" + animalType + "/" + photo));
 
-                Bitmap photoBackground = handlePhotoBackground(animalType, photo);
+                Bitmap photoIcon = handlePhotoIcon(animalType, photo, assetManager);
 
-                String name = photo;
-                name = name.replace("ic_", "");
-                name = name.substring(0, name.indexOf("."));
-                String fileText = "description/" + animalType + "/des_" + name + ".txt";
-                String content = "example contenttttttttttttttttttttttttttttttttttttttttttt";
+                Bitmap photoBackground = handlePhotoBackground(animalType, photo, assetManager);
+
+                String name = handleName(photo);
+
+                String content = handleDescription(assetManager, animalType, name);
+
 
                 //! Học sinh tự code để đọc dữ liệu text từ đường dẫn fileText trong thư mục assets vào tham số conten
                 //! Lấy thông tin động vật yêu thích đã lưu trữ trong file_savef của SharedPreference
@@ -220,26 +224,94 @@ public class FragmentMh1Menu extends Fragment {
         drawerLayout.closeDrawers();
     }
 
-    public Bitmap handlePhotoBackground(String animalType, String photo) throws IOException {
+    public String handleDescription(AssetManager assetManager, String animalType, String name) {
+        String description = "";
+        String fileText = "description/" + animalType + "/des_" + name.toLowerCase() + ".txt";
+
+        try (InputStream inputStream = assetManager.open(fileText); BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+
+            String line;
+            StringBuilder stringBuilder = new StringBuilder();
+
+            //! Đọc từng dòng từ tệp tin .txt
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+
+            //! Hiển thị nội dung đọc được
+            description = stringBuilder.toString();
+        } catch (IOException e) {
+            Log.d("khong the doc file description", "khong the doc file description");
+            e.printStackTrace();
+        }
+
+        return description;
+    }
+
+
+    /**
+     * xử lý ảnh icon cho animal
+     *
+     * @param animalType
+     * @param photo
+     * @return
+     * @throws IOException
+     */
+    public Bitmap handlePhotoIcon(String animalType, String photo, AssetManager assetManager) throws IOException {
+        String path = "animal/" + animalType + "/" + photo;
+        return BitmapFactory.decodeStream(assetManager.open(path));
+    }
+
+    /**
+     * xử lý name cho animal
+     */
+    public String handleName(String photo) {
+        String name = photo;
+        name = name.replace("ic_", "");
+        name = name.substring(0, name.indexOf("."));
+
+        name = capitalizeFirstLetter(name);
+        return name;
+    }
+
+
+    /**
+     * xử lý background  để thỏa mãn cả png và jpg
+     *
+     * @param animalType
+     * @param photo
+     * @return
+     * @throws IOException
+     */
+    public Bitmap handlePhotoBackground(String animalType, String photo, AssetManager assetManager) throws IOException {
         Bitmap photoBackground = null;
-        String backgroundPath = "bg_animal/" + animalType
-                + "/" + photo.replace("ic_", "bg_");
+        String backgroundPath = "bg_animal/" + animalType + "/" + photo.replace("ic_", "bg_");
         try {
-            photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(backgroundPath));
+            photoBackground = BitmapFactory.decodeStream(assetManager.open(backgroundPath));
         } catch (Exception e) {
             Log.d("change background to another extension", "change background to another extension");
             if (backgroundPath.contains(".png")) {
                 backgroundPath = backgroundPath.replace("png", "jpg");
-                photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(backgroundPath
-                ));
+                photoBackground = BitmapFactory.decodeStream(assetManager.open(backgroundPath));
             } else {
-                photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(
-                        "bg_animal/" + animalType
-                                + "/" + photo.replace("jpg", "png")));
+                photoBackground = BitmapFactory.decodeStream(assetManager.open("bg_animal/" + animalType + "/" + photo.replace("jpg", "png")));
             }
 
         }
         return photoBackground;
     }
 
+
+    /**
+     * hàm  viết hoa chữ đầu tiên
+     *
+     * @param input
+     * @return
+     */
+    public String capitalizeFirstLetter(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
 }
