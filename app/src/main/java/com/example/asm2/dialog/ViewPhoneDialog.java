@@ -26,74 +26,76 @@ import java.util.Locale;
 public class ViewPhoneDialog {
     ImageView ivIcon;
     EditText etPhoneNumber;
+    Button btnSave, btnDelete;
     Context context;
 
 
     public void showAlertDialog(final Context context, Animal animal, EditText etNumber) {
         this.context = context;
 
-//        listener.onClick();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-        //! Tạo đối tượng LayoutInflater từ context
+        SharedPreferences sharedPreferences = context.getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
+        //! gán view
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.alert_dialog_custom_view, null);
 
-        ivIcon = view.findViewById(R.id.ivIcon);
-        etPhoneNumber = view.findViewById(R.id.etPhoneNumber);
+        initView(view);
 
-
-        SharedPreferences sharedPreferences = context.getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
+        //! lấy dữ liệu từ sharedPreferences để xử lý giá trị cho view
         String phoneNumber = sharedPreferences.getString("phoneNumber_" + animal.getName(), "");
 
+        //! gán giá trị cho các view
+        assignValueToView(phoneNumber, animal);
 
-        if (!phoneNumber.isEmpty()) {
-
-            etPhoneNumber.setText(phoneNumber);
-        }
-
-        ivIcon.setImageBitmap(animal.getPhoto());
-
-
-        //! Thiết lập view của dialog
+        //! Dialog
+        //? Thiết lập view của dialog
         builder.setView(view);
 
-        //! Tạo dialog
+        //? Tạo dialog
         AlertDialog dialog = builder.create();
         dialog.setCancelable(true);
-        //! Xử lý sự kiện cho các button trong dialog
-        Button btnSave = view.findViewById(R.id.btnSave);
-        Button btnDelete = view.findViewById(R.id.btnDelete);
 
+        //? Xử lý sự kiện cho các button trong dialog
+        handleEvents(btnSave, btnDelete, sharedPreferences, animal, etNumber, etPhoneNumber, dialog);
 
-        //? cập nhật vào kho sharedPrefences
-        sharedPreferences = context.getSharedPreferences("PhoneAnimals", Context.MODE_PRIVATE);
+        //! Hiển thị dialog
+        dialog.show();
+
+    }
+
+    /**
+     * hàm xử lý sự kiện
+     *
+     * @param btnSave
+     * @param btnDelete
+     * @param sharedPreferences
+     * @param animal
+     * @param etNumber
+     * @param etPhoneNumber
+     * @param dialog
+     */
+    public void handleEvents(Button btnSave, Button btnDelete, SharedPreferences sharedPreferences, Animal animal, EditText etNumber, EditText etPhoneNumber, AlertDialog dialog) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //? Xử lý khi người dùng chọn "Yes"
+
                 String phoneNumber = etPhoneNumber.getText().toString();
                 if (!phoneNumber.isEmpty()) {
 
-
                     etNumber.setVisibility(View.VISIBLE);
-
 
                     //! nếu sdt cũ và mới là khác nhau thì phải xóa đi dữ liệu cũ trong sharedPreferences
 
                     String oldPhoneNumber = animal.getPhoneNumber();
-                    if ( !oldPhoneNumber.equals(phoneNumber) ) {
+
+                    if (!oldPhoneNumber.equals(phoneNumber)) {
                         SharedPreferences sharedPreferences2 = context.getSharedPreferences("PhoneAnimals___PhoneToImage", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor2 = sharedPreferences2.edit();
-
                         editor2.remove(oldPhoneNumber);
                         editor2.apply();
                     }
-
-
-                    Log.d("thuc hien luu vao sharedPrefernces", "thuc hien luu vao sharedPrefernces");
 
                     editor.putString("phoneNumber_" + animal.getName(), phoneNumber);
                     editor.apply();
@@ -103,7 +105,6 @@ public class ViewPhoneDialog {
                     //! Lưu Bitmap thành tệp tin
 
                     String filePath = saveBitmapToFile(animal.getPhoto());
-
 
                     SharedPreferences sharedPreferences2 = context.getSharedPreferences("PhoneAnimals___PhoneToImage", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor2 = sharedPreferences2.edit();
@@ -124,8 +125,6 @@ public class ViewPhoneDialog {
         btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //? Xử lý khi người dùng chọn "No"
-                Log.d("thuc hien remove sharedPrefernces", "thuc hien remove sharedPrefernces");
 
                 SharedPreferences sharedPreferences2 = context.getSharedPreferences("PhoneAnimals___PhoneToImage", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor2 = sharedPreferences2.edit();
@@ -143,10 +142,31 @@ public class ViewPhoneDialog {
                 etNumber.setVisibility(View.GONE);
             }
         });
+    }
 
-        //! Hiển thị dialog
-        dialog.show();
+    /**
+     * assign value
+     *
+     * @param phoneNumber
+     * @param animal
+     */
+    public void assignValueToView(String phoneNumber, Animal animal) {
+        if (!phoneNumber.isEmpty()) {
+            etPhoneNumber.setText(phoneNumber);
+        }
+        ivIcon.setImageBitmap(animal.getPhoto());
+    }
 
+    /**
+     * ánh xạ view
+     *
+     * @param view
+     */
+    public void initView(View view) {
+        ivIcon = view.findViewById(R.id.ivIcon);
+        etPhoneNumber = view.findViewById(R.id.etPhoneNumber);
+        btnSave = view.findViewById(R.id.btnSave);
+        btnDelete = view.findViewById(R.id.btnDelete);
     }
 
     private String saveBitmapToFile(Bitmap bitmap) {

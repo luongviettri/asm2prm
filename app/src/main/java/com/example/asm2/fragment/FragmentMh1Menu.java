@@ -147,70 +147,24 @@ public class FragmentMh1Menu extends Fragment {
 
         //! Chuyển sang màn hình chi tiết
         MainActivity mainActivity = (MainActivity) mContext;
-
         mainActivity.showDetail(listAnimals, animal);
-    }
-
-    /**
-     * hàm fix lỗi file ảnh quá lớn
-     *
-     * @param originalBitmap
-     * @return
-     */
-    private Bitmap resizeBitmap(Bitmap originalBitmap) {
-        int width = originalBitmap.getWidth();
-        int height = originalBitmap.getHeight();
-
-        float scaleWidth = ((float) 200) / width;
-        float scaleHeight = ((float) 200) / height;
-
-        Matrix matrix = new Matrix();
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        return Bitmap.createBitmap(originalBitmap, 0, 0, width, height, matrix, false);
     }
 
 
     private void showAnimals(String animalType) {
 
-        listAnimals = new ArrayList<>();
+        //! tạo list animal
+        listAnimals = createAnimalList(animalType);
 
-        try {
-            AssetManager assetManager = mContext.getAssets();
+        //! Hiển thị list animal lên RecyclerView
+        displayListToRecyclerView();
+    }
 
-            String[] list = assetManager.list("animal/" + animalType);
+    /**
+     * hiển thị lên recyclerView
+     */
 
-
-            for (String photo : list) {
-
-                Bitmap photoIcon = handlePhotoIcon(animalType, photo, assetManager);
-
-                Bitmap photoBackground = handlePhotoBackground(animalType, photo, assetManager);
-
-                String name = handleName(photo);
-
-                String content = handleDescription(assetManager, animalType, name);
-
-
-                //! Học sinh tự code để đọc dữ liệu text từ đường dẫn fileText trong thư mục assets vào tham số conten
-                //! Lấy thông tin động vật yêu thích đã lưu trữ trong file_savef của SharedPreference
-
-                SharedPreferences sharedPreferences = mContext.getSharedPreferences("FavoriteAnimals", Context.MODE_PRIVATE);
-                boolean isFav = sharedPreferences.getBoolean("isFav_" + name, false);
-
-                //! Khởi tạo động vật
-                String path = animalType + "/" + photo;
-
-                Animal animal = new Animal(path, photoIcon, photoBackground, name, content, isFav);
-                //! Cho vào danh sách
-                listAnimals.add(animal);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        //! Hiển thị danh sách ảnh lên RecyclerView
-
+    public void displayListToRecyclerView() {
         AnimalAdapter animalAdapter = new AnimalAdapter(listAnimals, mContext, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -222,6 +176,57 @@ public class FragmentMh1Menu extends Fragment {
         recyclerViewAnimal.setAdapter(animalAdapter);
 
         drawerLayout.closeDrawers();
+    }
+
+    /**
+     * xử lý tạo animal
+     */
+
+    public ArrayList<Animal> createAnimalList(String animalType) {
+        listAnimals = new ArrayList<Animal>();
+
+        try {
+
+            AssetManager assetManager = mContext.getAssets();
+            String[] list = assetManager.list("animal/" + animalType); //! list sẽ chứa 9 string tên của động vật
+
+            for (String photo : list) {
+                //! chuẩn bị tài nguyên để khởi tạo animal: path, photoIcon, photoBackground, name, content, isFav
+
+                String path = animalType + "/" + photo;
+
+                Bitmap photoIcon = handlePhotoIcon(animalType, photo, assetManager);
+
+                Bitmap photoBackground = handlePhotoBackground(animalType, photo, assetManager);
+
+                String name = handleName(photo);
+
+                String content = handleDescription(assetManager, animalType, name);
+
+                boolean isFav = handleFavorite(name);
+
+
+                Animal animal = new Animal(path, photoIcon, photoBackground, name, content, isFav);
+
+                //! Cho vào danh sách
+
+                listAnimals.add(animal);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (ArrayList<Animal>) listAnimals;
+    }
+
+    /**
+     * xử lý thuộc tính favorite của animal
+     *
+     * @param name
+     * @return
+     */
+    public boolean handleFavorite(String name) {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("FavoriteAnimals", Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean("isFav_" + name, false);
     }
 
     public String handleDescription(AssetManager assetManager, String animalType, String name) {
@@ -289,7 +294,7 @@ public class FragmentMh1Menu extends Fragment {
         try {
             photoBackground = BitmapFactory.decodeStream(assetManager.open(backgroundPath));
         } catch (Exception e) {
-            Log.d("change background to another extension", "change background to another extension");
+            //! nếu vào đây thì background image đang khác định dạng so với icon ( png != jpg or ngược lại) => chỗ này sửa đuôi file
             if (backgroundPath.contains(".png")) {
                 backgroundPath = backgroundPath.replace("png", "jpg");
                 photoBackground = BitmapFactory.decodeStream(assetManager.open(backgroundPath));
