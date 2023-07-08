@@ -24,6 +24,7 @@ import com.example.asm2.activity.MainActivity;
 import com.example.asm2.adapter.AnimalAdapter;
 import com.example.asm2.model.Animal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -177,40 +178,9 @@ public class FragmentMh1Menu extends Fragment {
 
 
             for (String photo : list) {
-
-
                 Bitmap photoIcon = BitmapFactory.decodeStream(mContext.getAssets().open("animal/" + animalType + "/" + photo));
 
-
-
-
-
-                Bitmap photoBackground = null;
-
-
-                String backgroundPath = "bg_animal/" + animalType
-                        + "/" + photo.replace("ic_", "bg_");
-                try {
-                    photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(backgroundPath));
-
-                } catch (Exception e) {
-                    Log.d("something wrong in background", "something wrong in background");
-                    e.printStackTrace();
-                }
-
-                if (photoBackground == null) {
-
-                    if (backgroundPath.contains(".png")) {
-                        backgroundPath = backgroundPath.replace("png", "jpg");
-                        photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(backgroundPath
-                        ));
-                    } else {
-                        photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(
-                                "bg_animal/" + animalType
-                                        + "/" + photo.replace("jpg", "png")));
-                    }
-                }
-
+                Bitmap photoBackground = handlePhotoBackground(animalType, photo);
 
                 String name = photo;
                 name = name.replace("ic_", "");
@@ -249,4 +219,27 @@ public class FragmentMh1Menu extends Fragment {
 
         drawerLayout.closeDrawers();
     }
+
+    public Bitmap handlePhotoBackground(String animalType, String photo) throws IOException {
+        Bitmap photoBackground = null;
+        String backgroundPath = "bg_animal/" + animalType
+                + "/" + photo.replace("ic_", "bg_");
+        try {
+            photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(backgroundPath));
+        } catch (Exception e) {
+            Log.d("change background to another extension", "change background to another extension");
+            if (backgroundPath.contains(".png")) {
+                backgroundPath = backgroundPath.replace("png", "jpg");
+                photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(backgroundPath
+                ));
+            } else {
+                photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(
+                        "bg_animal/" + animalType
+                                + "/" + photo.replace("jpg", "png")));
+            }
+
+        }
+        return photoBackground;
+    }
+
 }
