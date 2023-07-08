@@ -177,12 +177,41 @@ public class FragmentMh1Menu extends Fragment {
 
 
             for (String photo : list) {
-                Bitmap photoB = BitmapFactory.decodeStream(mContext.getAssets().open("animal/" + animalType + "/" + photo));
-                Bitmap photoBG = null;
+
+
+                Bitmap photoIcon = BitmapFactory.decodeStream(mContext.getAssets().open("animal/" + animalType + "/" + photo));
+
+
+
+
+
+                Bitmap photoBackground = null;
+
+
+                String backgroundPath = "bg_animal/" + animalType
+                        + "/" + photo.replace("ic_", "bg_");
                 try {
-                    photoBG = BitmapFactory.decodeStream(mContext.getAssets().open("bg_animal/" + animalType + "/" + photo.replace("ic_", "bg_")));
-                } catch (Exception ignored) {
+                    photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(backgroundPath));
+
+                } catch (Exception e) {
+                    Log.d("something wrong in background", "something wrong in background");
+                    e.printStackTrace();
                 }
+
+                if (photoBackground == null) {
+
+                    if (backgroundPath.contains(".png")) {
+                        backgroundPath = backgroundPath.replace("png", "jpg");
+                        photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(backgroundPath
+                        ));
+                    } else {
+                        photoBackground = BitmapFactory.decodeStream(mContext.getAssets().open(
+                                "bg_animal/" + animalType
+                                        + "/" + photo.replace("jpg", "png")));
+                    }
+                }
+
+
                 String name = photo;
                 name = name.replace("ic_", "");
                 name = name.substring(0, name.indexOf("."));
@@ -198,7 +227,7 @@ public class FragmentMh1Menu extends Fragment {
                 //! Khởi tạo động vật
                 String path = animalType + "/" + photo;
 
-                Animal animal = new Animal(path, photoB, photoBG, name, content, isFav);
+                Animal animal = new Animal(path, photoIcon, photoBackground, name, content, isFav);
                 //! Cho vào danh sách
                 listAnimals.add(animal);
             }
